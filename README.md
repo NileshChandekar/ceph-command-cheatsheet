@@ -1,6 +1,83 @@
 # ceph-command-cheatsheet
 
 
+~~~
+root@ct-ceph-01:~# ceph osd lspools
+1 device_health_metrics
+2 images
+3 volumes
+4 vms
+5 backups
+6 metrics
+7 manila_data
+8 manila_metadata
+9 .rgw.root
+10 default.rgw.log
+11 default.rgw.control
+12 default.rgw.meta
+13 default.rgw.buckets.index
+14 default.rgw.buckets.data
+16 .nfs
+root@ct-ceph-01:~# 
+~~~
+
+~~~
+root@ct-ceph-01:~# rbd ls images
+15c003c4-7921-4263-a994-7a22ce96d720
+31442679-83cf-4bdd-843f-2deae8a8195c
+414f3cc2-2fe8-49d4-9061-1f6d6b7b2732
+4ab5ce92-c702-4cc5-97c0-d2207893481a
+879ec559-787f-4abb-b6b7-7af17f44669b
+9796560d-52cb-4400-8d54-b30c1da37f79
+9bb3e209-586b-4f5c-bcee-e602a39ca728
+bfa15a3f-ed2c-4b32-964f-28b608af0c9b
+d3a0a021-349e-4706-9331-099c3b43b1b2
+root@ct-ceph-01:~# 
+~~~
+
+~~~
+root@ct-ceph-01:~# rbd info images/31442679-83cf-4bdd-843f-2deae8a8195c
+rbd image '31442679-83cf-4bdd-843f-2deae8a8195c':
+	size 91 GiB in 23296 objects
+	order 22 (4 MiB objects)
+	snapshot_count: 1
+	id: 33888af7c8a921
+	block_name_prefix: rbd_data.33888af7c8a921
+	format: 2
+	features: layering, exclusive-lock, object-map, fast-diff, deep-flatten
+	op_features: 
+	flags: 
+	create_timestamp: Fri Aug  2 20:24:25 2024
+	access_timestamp: Fri Aug  2 20:24:25 2024
+	modify_timestamp: Fri Aug  2 20:24:25 2024
+root@ct-ceph-01:~# 
+~~~
+
+
+~~~
+root@ct-ceph-01:~# rados ls -p  images | grep -i 31442679-83cf-4bdd-843f-2deae8a8195c
+rbd_id.31442679-83cf-4bdd-843f-2deae8a8195c
+root@ct-ceph-01:~# 
+~~~
+
+~~~
+root@ct-ceph-01:~# rbd snap ls images/31442679-83cf-4bdd-843f-2deae8a8195c
+SNAPID  NAME  SIZE    PROTECTED  TIMESTAMP               
+    18  snap  91 GiB  yes        Fri Aug  2 20:24:32 2024
+root@ct-ceph-01:~# 
+~~~
+
+~~~
+root@ct-ceph-01:~# rbd snap protect images/31442679-83cf-4bdd-843f-2deae8a8195c@snap
+rbd: snap is already protected
+root@ct-ceph-01:~# 
+~~~
+
+
+
+
+
+
 Basic Command
 ===
 
