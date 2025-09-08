@@ -1,5 +1,12 @@
 # ceph-command-cheatsheet
 
+```bash
+ceph osd dump | grep ratio
+ceph osd set-full-ratio 0.96
+ceph osd set-nearfull-ratio 0.90
+ceph osd set-backfillfull-ratio 0.93
+```
+
 
 ~~~
 root@ct-ceph-01:~# ceph osd lspools
