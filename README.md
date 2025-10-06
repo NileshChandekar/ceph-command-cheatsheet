@@ -1,5 +1,372 @@
 # ceph-command-cheatsheet
 
+
+
+```bash
+bash-5.1$ ceph osd tree
+ID  CLASS  WEIGHT   TYPE NAME                        STATUS  REWEIGHT  PRI-AFF
+-1         1.97659  root default                                              
+-3         1.97659      host f-titan-aio-001-ct-lan                           
+0    hdd  0.48830          osd.0                      down         0  1.00000
+1    hdd  0.48830          osd.1                        up   1.00000  1.00000
+2    hdd  1.00000          osd.2                        up   1.00000  1.00000
+bash-5.1$
+```
+
+```bash
+bash-5.1$ ceph osd metadata 0
+{
+    "id": 0,
+    "arch": "x86_64",
+    "back_addr": "[v2:10.244.156.147:6802/686332882,v1:10.244.156.147:6803/686332882]",
+    "back_iface": "",
+    "bluefs": "1",
+    "bluefs_dedicated_db": "0",
+    "bluefs_dedicated_wal": "0",
+    "bluefs_single_shared_device": "1",
+    "bluestore_allocation_from_file": "0",
+    "bluestore_bdev_access_mode": "blk",
+    "bluestore_bdev_block_size": "4096",
+    "bluestore_bdev_dev_node": "/dev/sdb",
+    "bluestore_bdev_devices": "sdb",
+    "bluestore_bdev_driver": "KernelDevice",
+    "bluestore_bdev_optimal_io_size": "0",
+    "bluestore_bdev_partition_path": "/dev/sdb",
+    "bluestore_bdev_rotational": "1",
+    "bluestore_bdev_size": "536870912000",
+    "bluestore_bdev_support_discard": "1",
+    "bluestore_bdev_type": "hdd",
+    "bluestore_min_alloc_size": "4096",
+    "ceph_release": "reef",
+    "ceph_version": "ceph version 18.2.4 (e7ad5345525c7aa95470c26863873b581076945d) reef (stable)",
+    "ceph_version_short": "18.2.4",
+    "ceph_version_when_created": "ceph version 18.2.4 (e7ad5345525c7aa95470c26863873b581076945d) reef (stable)",
+    "container_hostname": "rook-ceph-osd-0-fcbf8797b-9htlm",
+    "container_image": "172.29.230.136:3000/automationuser/rookceph1.15/ceph/ceph:v18.2.4",
+    "cpu": "AMD EPYC 7H12 64-Core Processor",
+    "created_at": "2025-06-06T08:27:54.697313Z",
+    "default_device_class": "hdd",
+    "device_ids": "sdb=Virtual_Disk_60022480a606d9dd478746063ae22b7e",
+    "device_paths": "sdb=/dev/disk/by-path/acpi-VMBUS:00-vmbus-7f47eea1cffe43c48589feb52150a8bb-lun-2",
+    "devices": "sdb",
+    "distro": "centos",
+    "distro_description": "CentOS Stream 9",
+    "distro_version": "9",
+    "front_addr": "[v2:10.244.156.147:6800/686332882,v1:10.244.156.147:6801/686332882]",
+    "front_iface": "",
+    "hb_back_addr": "[v2:10.244.156.147:6806/686332882,v1:10.244.156.147:6807/686332882]",
+    "hb_front_addr": "[v2:10.244.156.147:6804/686332882,v1:10.244.156.147:6805/686332882]",
+    "hostname": "f-titan-aio-001.ct.lan",
+    "journal_rotational": "1",
+    "kernel_description": "#2 SMP Mon Nov 4 23:41:59 PST 2024",
+    "kernel_version": "5.15.0-302.167.6.el9uek.x86_64",
+    "mem_swap_kb": "4194300",
+    "mem_total_kb": "515380840",
+    "network_numa_unknown_ifaces": "back_iface,front_iface",
+    "objectstore_numa_unknown_devices": "sdb",
+    "os": "Linux",
+    "osd_data": "/var/lib/ceph/osd/ceph-0",
+    "osd_objectstore": "bluestore",
+    "osdspec_affinity": "",
+    "pod_name": "rook-ceph-osd-0-fcbf8797b-9htlm",
+    "pod_namespace": "rook-ceph",
+    "rotational": "1"
+}
+bash-5.1$
+```
+
+```bash
+bash-5.1$ ceph osd crush rule dump
+[
+    {
+        "rule_id": 0,
+        "rule_name": "replicated_rule",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 1,
+        "rule_name": ".rgw.root",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 2,
+        "rule_name": "my-store1.rgw.control",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 3,
+        "rule_name": "my-store1.rgw.meta",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 4,
+        "rule_name": "my-store1.rgw.log",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 5,
+        "rule_name": "my-store1.rgw.otp",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 6,
+        "rule_name": "my-store1.rgw.buckets.non-ec",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 7,
+        "rule_name": "my-store1.rgw.buckets.index",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 8,
+        "rule_name": "my-store1.rgw.buckets.data",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 9,
+        "rule_name": "myfs-metadata",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 10,
+        "rule_name": "myfs-data0",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "chooseleaf_firstn",
+                "num": 0,
+                "type": "host"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    },
+    {
+        "rule_id": 11,
+        "rule_name": "replicated-on-osd",
+        "type": 1,
+        "steps": [
+            {
+                "op": "take",
+                "item": -1,
+                "item_name": "default"
+            },
+            {
+                "op": "choose_firstn",
+                "num": 0,
+                "type": "osd"
+            },
+            {
+                "op": "emit"
+            }
+        ]
+    }
+]
+
+bash-5.1$ ceph osd tree
+ID  CLASS  WEIGHT   TYPE NAME                        STATUS  REWEIGHT  PRI-AFF
+-1         0.48830  root default                                              
+-3         0.48830      host f-titan-aio-001-ct-lan                           
+1    hdd  0.48830          osd.1                        up   1.00000  1.00000
+bash-5.1$ 
+```
+
+```mermaid
+flowchart TB
+    A[Ceph Cluster] --> B[Monitors]
+    A --> C[OSDs]
+
+    B -->|1 Monitor| M1[Mon a - quorum]
+    C -->|1 OSD| OSD1[osd-1 up/in]
+
+    subgraph Pools
+        P1[RGW_S3_Pools_size1]
+        P2[CephFS_Metadata_Data_Pools_size1]
+        P3[RBD_Pools_size1]
+    end
+
+    OSD1 --> P1
+    OSD1 --> P2
+    OSD1 --> P3
+
+    subgraph PGs
+        PG1[PGs for RGW]
+        PG2[PGs for CephFS]
+        PG3[PGs for RBD]
+    end
+
+    P1 --> PG1
+    P2 --> PG2
+    P3 --> PG3
+
+    %% Status annotations
+    PG1:::active -->|Can read/write| RGW_OK[RGW usable]
+    PG2:::inactive -->|Degraded / blocked| FS_WARN[CephFS degraded]
+    PG3:::inactive -->|Degraded / blocked| RBD_WARN[RBD may fail]
+
+    classDef active fill:#c6f5d0,stroke:#2e7d32,st
+```
+
+ 
+
+
 ```bash
 ceph osd dump | grep ratio
 ceph osd set-full-ratio 0.96
